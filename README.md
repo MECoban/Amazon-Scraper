@@ -1,3 +1,5 @@
+# Amazon Profitable Product Finder For Dropshipping and Arbitrage 
+
 ## Overview
 This suite of Python scripts scrapes Amazon Canada and Amazon USA for products in the home and kitchen category, compares the prices, and identifies 
 profitable arbitrage opportunities based on price differences.
@@ -7,9 +9,9 @@ Python 3
 Libraries: requests_html, pandas
 To install the required Python libraries, run:
 
-'''
+```
 pip install requests_html pandas
-'''
+```
 
 
 Files
@@ -23,18 +25,18 @@ Set num_pages to the number of pages you wish to scrape.
 
 Execute the scraping scripts for each region:
 
-'''
+```
 python amazon_scrape_usa.py
-'''
+```
 
-'''
+```
 python amazon_scrape_ca.py
-'''
+```
 Run the comparison and profit calculation:
 
-'''
+```
 python calculate_profit.py
-'''
+```
 
 ## How It Works
 
