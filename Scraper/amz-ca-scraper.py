@@ -14,7 +14,7 @@ urls = []
 prices = []
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",  # Replace with a user agent string
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     "Accept-Language": "en-US,en;q=0.9",
 }
 
@@ -24,8 +24,8 @@ for p_num in range(1, num_pages + 1):
     try:
         r = s.get(page_url, headers=headers)
         r.html.render(
-            sleep=random.uniform(5, 8)
-        )  # Randomized sleep to mimic human behavior
+            sleep=random.uniform(5, 8) # Randomized sleep to mimic human behavior
+        )  
         items = r.html.find("div[data-asin]")
 
         for item in items:
