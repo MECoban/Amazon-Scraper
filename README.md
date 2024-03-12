@@ -52,4 +52,5 @@ Amazon may block requests if too many are made in a short time; use delays betwe
 ## Disclaimer
 
 This tool is intended for educational purposes only. Always adhere to Amazon’s Terms of Service. 
-Automated scraping and price comparison may be against their terms and could result in account penalties. Use responsibly.
+Automated scraping and price comparison may be against their terms and could result in account penalties. Use responsibly. 
+Be aware: Shipping fee and Amazon selling commisions not included. 
