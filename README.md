@@ -44,6 +44,8 @@ The scripts make HTTP requests to Amazon's search results pages and parse the HT
 Then they merge the USA and Canada product data on their ASINs, calculate the price difference, and output products 
 that are cheaper in the USA compared to Canada, along with the profit percentage.
 
+<img width="1366" alt="Screenshot " src="https://github.com/MECoban/Amazon-Scraper/assets/156511598/5612057e-c8da-4a55-8002-099c81cfb49e">
+
 ## Troubleshooting
 
 Ensure you have a stable internet connection.
