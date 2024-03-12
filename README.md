@@ -35,7 +35,7 @@ python amazon_scrape_ca.py
 Run the comparison and profit calculation:
 
 ```
-python calculate_profit.py
+python analysis.py
 ```
 
 ## How It Works
