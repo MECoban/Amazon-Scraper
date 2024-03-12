@@ -1,14 +1,14 @@
 from requests_html import HTMLSession
 import pandas as pd
 
-# Define the main URL and the number of pages to scrape
+
 main_url = "https://www.amazon.com/s?i=kitchen-intl-ship&rh=n%3A16225011011&fs=true&"
 num_pages = 300
 
-# Initialize HTMLSession
+
 s = HTMLSession()
 
-# Initialize lists to hold product information
+
 asins = []
 titles = []
 urls = []

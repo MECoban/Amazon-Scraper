@@ -1,83 +1,64 @@
 from requests_html import HTMLSession
 import pandas as pd
+import time
+import random
 
-
-
-main_url = "https://www.amazon.ca/s?i=kitchen&rh=n%3A2206275011&fs=true&page=2"
-num_pages = 300
-
+main_url = "https://www.amazon.ca/s?i=kitchen&rh=n%3A2206275011&fs=true&"
+num_pages = 350
 
 s = HTMLSession()
-
 
 asins = []
 titles = []
 urls = []
 prices = []
-# dimensions = []
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',  # Replace with a user agent string
+    'Accept-Language': 'en-US,en;q=0.9',
+}
 
 for p_num in range(1, num_pages + 1):
     page_url = f"{main_url}page={p_num}"
-    r = s.get(page_url)
-    r.html.render(sleep=1, timeout=30)  # Increase timeout if necessary
     print(f"Processing {page_url}")
+    try:
+        r = s.get(page_url, headers=headers)
+        r.html.render(sleep=random.uniform(5, 8))  # Randomized sleep to mimic human behavior
+        items = r.html.find("div[data-asin]")
 
-    items = r.html.find("div[data-asin]")
+        for item in items:
+            asin = item.attrs.get("data-asin", None)
+            if asin:
+                asins.append(asin)
+                urls.append(f"https://www.amazon.ca/dp/{asin}")
+                
+                # Assuming these are the correct selectors
+                title_selector = "span.a-size-medium.a-color-base.a-text-normal"
+                price_selector = "span.a-price > span.a-offscreen"
+                
+                title_element = item.find(title_selector, first=True)
+                titles.append(title_element.text if title_element else "Title not found")
 
-    for item in items:
-        asin = item.attrs["data-asin"]
-        if asin:
-            asins.append(asin)
-            product_url = f"https://www.amazon.ca/dp/{asin}"
-            urls.append(product_url)
+                price_element = item.find(price_selector, first=True)
+                prices.append(price_element.text if price_element else "Price not found")
 
-            title_element = item.find("span.a-text-normal", first=True)
-            if title_element:
-                titles.append(title_element.text)
-            else:
-                titles.append(None)
+    except Exception as e:
+        print(f"An error occurred on page {p_num}: {e}")
 
-            # titles.append(title_element.text if title_element else None)
+    time.sleep(random.uniform(3, 9))  # Sleep after each page request
 
-            price_element = item.find("span.a-price > span.a-offscreen", first=True)
-            if price_element:
-                prices.append(price_element.text)
-            else:
-                prices.append(None)
-
-            # prices.append(price_element.text if price_element else None)
-
-            """product_page = s.get(product_url)
-            product_page.html.render(sleep=1, timeout=30)  # Increase sleep time if necessary to ensure the page loads completely
-            product_details = product_page.html.find('#detailBullets_feature_div', first=True)  # Target the container that usually holds details
-            if product_details:
-                # Look for a list item that contains the dimensions
-                dimension_elements = product_details.find('li')
-                dimension_text = None
-                for element in dimension_elements:
-                    if 'Product Dimensions' in element.text:
-                        dimension_text = element.text.split('\n')[-1]  # The actual dimensions are usually after the label
-                        break
-                dimensions.append(dimension_text)
-            else:
-                dimensions.append(None)"""
-
-# Check that all lists are the same length
-assert (
-    len(asins) == len(titles) == len(urls) == len(prices)
-), "Mismatch in list lengths"  # add == len(dimensions) for dimensions
-
-products_df2 = pd.DataFrame(
-    {
+# Verify data consistency
+if len(asins) == len(titles) == len(urls) == len(prices):
+    products_df = pd.DataFrame({
         "ASIN": asins,
         "Title": titles,
         "URL": urls,
-        "Price": prices,
-        # "Dimensions": dimensions
-    }
-)
-
-# Print the DataFrame to verify if you need
-#print(products_df2)
-
-products_df2.to_csv("data/home-kitchen_feature_ca.csv", index=False)
+        "Price": prices
+    })
+    try:
+        products_df.to_csv("data/home-kitchen_feature_ca.csv", index=False)
+        print("CSV file has been saved.")
+    except Exception as e:
+        print(f"Error saving CSV: {e}")
+else:
+    print("Mismatch in list lengths, please check the scraped data.")

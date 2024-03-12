@@ -1,10 +1,11 @@
 import pandas as pd
+import numpy as np
 
 usa_products_df = pd.read_csv("data/home-kitchen_feature_usa.csv")
 ca_products_df = pd.read_csv("data/home-kitchen_feature_ca.csv")
 
-products_df = usa_products_df[~usa_products_df.index.duplicated(keep="first")]
-products_df1 = ca_products_df[~ca_products_df.index.duplicated(keep="first")]
+products_df = usa_products_df.drop_duplicates(subset='ASIN', keep='first')
+products_df1 = ca_products_df.drop_duplicates(subset='ASIN', keep='first')
 
 products_df.to_csv("data/feature_usa.csv", index=False)
 products_df1.to_csv("data/feature_ca.csv", index=False)
@@ -12,9 +13,8 @@ products_df1.to_csv("data/feature_ca.csv", index=False)
 usa_df = pd.read_csv("data/feature_usa.csv")
 canada_df = pd.read_csv("data/feature_ca.csv")
 
-
-usa_df["Price"] = usa_df["Price"].replace("[\$,]", "", regex=True).astype(float)
-canada_df["Price"] = canada_df["Price"].replace("[\$,]", "", regex=True).astype(float)
+usa_df["Price"] = pd.to_numeric(usa_df["Price"].replace("[\$,]", "", regex=True).replace("Price not found", np.nan), errors='coerce')
+canada_df["Price"] = pd.to_numeric(canada_df["Price"].replace("[\$,]", "", regex=True).replace("Price not found", np.nan), errors='coerce')
 
 # Merge the datasets on the 'ASIN' column
 merged_df = pd.merge(usa_df, canada_df, on="ASIN", suffixes=("_USA", "_Canada"))
